@@ -1,5 +1,7 @@
 {
-  "Parameters": {},
+  "Parameters": {
+    "Environment": "live"
+  },
   "Tags": {
     "Project": "traffic-tracker",
     "Environment": "live"

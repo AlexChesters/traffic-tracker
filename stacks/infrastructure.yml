@@ -1,5 +1,12 @@
 Transform: AWS::Serverless-2016-10-31
 Description: Infrastructure for traffic-tracker
+Parameters:
+  Environment:
+    Description: The infrastructure environment
+    Type: String
+    AllowedValues:
+      - test
+      - live
 Resources:
   FetchFeedRole:
     Type: AWS::IAM::Role
@@ -23,3 +30,43 @@ Resources:
       Role: !GetAtt FetchFeedRole.Arn
       MemorySize: 128
       Timeout: 5
+  StateMachineRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: states.amazonaws.com
+      Policies:
+        - PolicyName: state-machine-policy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Sid: LambdaStatement
+                Effect: Allow
+                Action: lambda:InvokeFunction
+                Resource:
+                  - !GetAtt FetchFeedFunction.Arn
+  StateMachine:
+    Type: AWS::StepFunctions::StateMachine
+    Properties:
+      StateMachineName: !Sub '${Environment}-traffic-tracker'
+      RoleArn: !GetAtt StateMachineRole.Arn
+      DefinitionString: !Sub |
+        {
+          "States": {
+            "FetchFeed": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "ResultPath": "$",
+              "Parameters": {
+                "FunctionName": "${FetchFeedFunction.Arn}"
+              },
+              "End": true
+            }
+          },
+          "StartAt": "FetchFeed"
+        }
