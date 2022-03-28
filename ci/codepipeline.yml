@@ -1,0 +1,129 @@
+Description: Pipeline for traffic-tracker
+Parameters:
+  BasePolicyArn:
+    Type: String
+    Description: IAM Policy ARN of the base CodeBuild policy
+    Default: arn:aws:iam::008356366354:policy/core-infrastructure-global-CodeBuildBaseManagedPolicy-FWV7ZO5N6AGF
+  CodePipelineCloudFormationRoleArn:
+    Type: String
+    Description: IAM Role ARN to be assumed by CodePipeline to perform CloudFormation actions
+    Default: arn:aws:iam::008356366354:role/core-infrastructure-globa-CodePipelineCloudFormati-1NF00Q6M6OVE1
+  BuildArtifactsBucket:
+    Type: String
+    Description: S3 Bucket name where build artifacts are stored
+    Default: core-infrastructure-eu-w-buildartifactsbucketeuwe-12d2acmozch84
+  CodePipelineExecutionRoleArn:
+    Type: String
+    Description: IAM Role ARN to be assumed by CodePipeline when executing
+    Default: arn:aws:iam::008356366354:role/core-infrastructure-globa-CodePipelineBaseRoleB458-161XPXE39XXUL
+Resources:
+  CodeBuildRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: codebuild.amazonaws.com
+      ManagedPolicyArns:
+        - !Ref BasePolicyArn
+  CodeBuildProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Artifacts:
+        Type: CODEPIPELINE
+        Location: !Ref BuildArtifactsBucket
+        Path: /artifacts/traffic-tracker/
+        Packaging: NONE
+        Name: build
+        NamespaceType: BUILD_ID
+      TimeoutInMinutes: 5
+      Description: Builds traffic-tracker
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/standard:5.0
+        Type: LINUX_CONTAINER
+      Name: traffic-tracker
+      ServiceRole: !GetAtt CodeBuildRole.Arn
+      Source:
+        Type: CODEPIPELINE
+        BuildSpec: buildspec.yml
+  CodePipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      ArtifactStore:
+        Type: S3
+        Location: !ImportValue core-infrastructure-eu-west-1-build-artifacts-bucket
+      Name: traffic-tracker
+      RestartExecutionOnUpdate: true
+      RoleArn: !Ref CodePipelineExecutionRoleArn
+      Stages:
+        - Name: Source
+          Actions:
+            - ActionTypeId:
+                Category: Source
+                Owner: AWS
+                Version: "1"
+                Provider: CodeStarSourceConnection
+              OutputArtifacts:
+                - Name: GitHubSource
+              RunOrder: 1
+              Name: Clone-From-GitHub
+              Namespace: SourceVariables
+              Configuration:
+                ConnectionArn: !ImportValue core-infrastructure-eu-west-1-codestar-github-connection-arn
+                FullRepositoryId: AlexChesters/traffic-tracker
+                BranchName: main
+                OutputArtifactFormat: CODE_ZIP
+        - Name: Build-Lambdas
+          Actions:
+            - ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: "1"
+                Provider: CodeBuild
+              InputArtifacts:
+                - Name: GitHubSource
+              OutputArtifacts:
+                - Name: BuiltSource
+              RunOrder: 1
+              Name: CodeBuild
+              Configuration:
+                ProjectName: !Ref CodeBuildProject
+        - Name: Deploy-To-Test
+          Actions:
+            - ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: "1"
+                Provider: CloudFormation
+              InputArtifacts:
+                - Name: GitHubSource
+              RunOrder: 1
+              Name: Update-Stack
+              Configuration:
+                ActionMode: REPLACE_ON_FAILURE
+                Capabilities: CAPABILITY_NAMED_IAM,CAPABILITY_AUTO_EXPAND
+                StackName: traffic-tracker-test
+                RoleArn: !Ref CodePipelineCloudFormationRoleArn
+                TemplatePath: BuiltSource::stacks/infrastructure.yml
+                TemplateConfiguration: BuiltSource::stacks/parameters/infrastructure/test.json
+        - Name: Deploy-To-Live
+          Actions:
+            - ActionTypeId:
+                Category: Deploy
+                Owner: AWS
+                Version: "1"
+                Provider: CloudFormation
+              InputArtifacts:
+                - Name: GitHubSource
+              RunOrder: 1
+              Name: Update-Stack
+              Configuration:
+                ActionMode: REPLACE_ON_FAILURE
+                Capabilities: CAPABILITY_NAMED_IAM,CAPABILITY_AUTO_EXPAND
+                StackName: traffic-tracker-live
+                RoleArn: !Ref CodePipelineCloudFormationRoleArn
+                TemplatePath: BuiltSource::stacks/infrastructure.yml
+                TemplateConfiguration: BuiltSource::stacks/parameters/infrastructure/live.json

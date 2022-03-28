@@ -1,0 +1,25 @@
+Transform: AWS::Serverless-2016-10-31
+Description: Infrastructure for traffic-tracker
+Resources:
+  FetchFeedRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+  FetchFeedFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: fetch_feed.main.handler
+      Runtime: python3.8
+      CodeUri: ../../../../fetch_feed/build
+      Role: !GetAtt FetchFeedRole.Arn
+      MemorySize: 128
+      Timeout: 5
