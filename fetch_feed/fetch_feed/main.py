@@ -1,6 +1,6 @@
 import feedparser
 
-def handler(event = {}, context = {}):
+def handler(*_):
     feed = feedparser.parse("https://m.highwaysengland.co.uk/feeds/rss/AllEvents.xml")
     print(feed["entries"][0])
 
