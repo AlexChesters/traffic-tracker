@@ -1,7 +1,6 @@
 .PHONY: clean venv test package
 
 clean:
-	rm -rf package.zip
 	rm -rf build
 
 venv:

@@ -19,7 +19,7 @@ Resources:
     Properties:
       Handler: fetch_feed.main.handler
       Runtime: python3.8
-      CodeUri: ../../../../fetch_feed/build
+      CodeUri: ../fetch_feed/build
       Role: !GetAtt FetchFeedRole.Arn
       MemorySize: 128
       Timeout: 5
