@@ -29,7 +29,7 @@ Resources:
       CodeUri: ../fetch_feed/build
       Role: !GetAtt FetchFeedRole.Arn
       MemorySize: 128
-      Timeout: 5
+      Timeout: 15
   StateMachineRole:
     Type: AWS::IAM::Role
     Properties:

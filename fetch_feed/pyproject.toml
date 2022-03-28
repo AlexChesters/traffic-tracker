@@ -5,8 +5,12 @@ description = "traffic tracker step for fetching the initial XML feed"
 authors = ["Alex Chesters"]
 license = "MIT"
 
+[tool.poetry.scripts]
+handler = "fetch_feed.main:handler"
+
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0"
+feedparser = "^6.0.8"
 
 [tool.poetry.dev-dependencies]
 pylint = "^2.7.4"
