@@ -4,7 +4,10 @@ clean:
 	rm -rf build
 
 install:
-	poetry install
+	( \
+			export PATH="${HOME}/.poetry/bin:${PATH}" && \
+			poetry install \
+	)
 
 run:
 	poetry run handler
@@ -15,6 +18,7 @@ test: install
 			export AWS_SECRET_ACCESS_KEY='testing' && \
 			export AWS_SESSION_TOKEN='testing' && \
 			export AWS_SECURITY_TOKEN='testing' && \
+			export PATH="${HOME}/.poetry/bin:${PATH}" && \
 			poetry run pylint fetch_feed \
 	)
 
