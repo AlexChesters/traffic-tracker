@@ -6,4 +6,5 @@ phases:
       python: 3.9
   build:
     commands:
-      - make
+      - make build
+      - aws cloudformation package --template-file ./stacks/infrastructure.yml --s3-bucket $ARTIFACTS_BUCKET --s3-prefix artifacts/traffic-tracker --output-template-file ./stacks/infrastructure.yml
