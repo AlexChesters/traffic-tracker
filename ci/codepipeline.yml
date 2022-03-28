@@ -99,7 +99,7 @@ Resources:
                 Version: "1"
                 Provider: CloudFormation
               InputArtifacts:
-                - Name: GitHubSource
+                - Name: BuiltSource
               RunOrder: 1
               Name: Update-Stack
               Configuration:
@@ -117,7 +117,7 @@ Resources:
                 Version: "1"
                 Provider: CloudFormation
               InputArtifacts:
-                - Name: GitHubSource
+                - Name: BuiltSource
               RunOrder: 1
               Name: Update-Stack
               Configuration:
