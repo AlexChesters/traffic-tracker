@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "load_metadata"
+name = "fetch_feed"
 version = "0.0.1"
 description = "traffic tracker step for fetching the initial XML feed"
 authors = ["Alex Chesters"]
