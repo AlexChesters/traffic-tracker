@@ -1,7 +1,7 @@
 import feedparser
 
 def handler(*_):
-    feed = feedparser.parse("https://m.highwaysengland.co.uk/feeds/rss/AllEvents.xml")
+    feed = feedparser.parse("http://m.highwaysengland.co.uk/feeds/rss/AllEvents.xml")
     print(feed["entries"][0])
 
 if __name__ == "__main__":
