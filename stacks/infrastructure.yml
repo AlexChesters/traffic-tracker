@@ -24,7 +24,7 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: 1
         WriteCapacityUnits: 1
-      TableName: !Sub "{Environment}-traffic-tracker"
+      TableName: !Sub "${Environment}-traffic-tracker"
   FetchFeedRole:
     Type: AWS::IAM::Role
     Properties:
