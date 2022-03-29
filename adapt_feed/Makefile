@@ -9,11 +9,8 @@ install:
 			poetry install \
 	)
 
-shell:
-	poetry shell
-
 run:
-	python3 adapt_feed/main.py
+	poetry run python3 adapt_feed/main.py
 
 test: install
 	( \

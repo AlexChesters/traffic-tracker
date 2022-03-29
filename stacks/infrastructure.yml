@@ -98,25 +98,42 @@ Resources:
       DefinitionString: !Sub |
         {
           "States": {
-            "FetchFeed": {
-              "Type": "Task",
-              "Resource": "arn:aws:states:::lambda:invoke",
-              "ResultPath": "$",
-              "Parameters": {
-                "FunctionName": "${FetchFeedFunction.Arn}"
-              },
-              "Next": "AdaptFeed"
+            "FetchFeeds": {
+              "Type": "Parallel",
+              "End": true,
+              "Branches": [
+                {
+                  "States": {
+                    "FetchUnplannedFeed": {
+                      "Type": "Task",
+                      "Resource": "arn:aws:states:::lambda:invoke",
+                      "Parameters": {
+                        "FunctionName": "${FetchFeedFunction.Arn}",
+                        "Payload": {
+                          "type": "unplanned"
+                        }
+                      }
+                    }
+                  },
+                  "StartAt": "FetchUnplannedFeed"
+                },
+                {
+                  "States": {
+                    "FetchPlannedFeed": {
+                      "Type": "Task",
+                      "Resource": "arn:aws:states:::lambda:invoke",
+                      "Parameters": {
+                        "FunctionName": "${FetchFeedFunction.Arn}",
+                        "Payload": {
+                          "type": "planned"
+                        }
+                      }
+                    }
+                  },
+                  "StartAt": "FetchPlannedFeed"
+                }
+              ]
             },
-            "AdaptFeed": {
-              "Type": "Task",
-              "Resource": "arn:aws:states:::lambda:invoke",
-              "InputPath": "$",
-              "ResultPath": "$",
-              "Parameters": {
-                "FunctionName": "${FetchFeedFunction.Arn}"
-              },
-              "End": true
-            }
           },
-          "StartAt": "FetchFeed"
+          "StartAt": "FetchFeeds"
         }
