@@ -1,12 +1,13 @@
-import feedparser
 import json
 
-def handler(event, _context = None):
+import feedparser
+
+def handler(_event = None, _context = None):
     feed = feedparser.parse("https://m.highwaysengland.co.uk/feeds/rss/UnplannedEvents.xml")
     return feed["entries"]
 
 if __name__ == "__main__":
     result = handler({}, None)
-    with open("../adapt_feed/stub-data.json", "w") as f:
+    with open("../adapt_feed/stub-data.json", "w", encoding="utf-8") as f:
         json.dump(result, f)
     print(result)
