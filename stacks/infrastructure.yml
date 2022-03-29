@@ -25,11 +25,11 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: fetch_feed.main.handler
-      Runtime: python3.8
+      Runtime: python3.9
       CodeUri: ../fetch_feed/build
       Role: !GetAtt FetchFeedRole.Arn
       MemorySize: 128
-      Timeout: 15
+      Timeout: 180
   StateMachineRole:
     Type: AWS::IAM::Role
     Properties:
