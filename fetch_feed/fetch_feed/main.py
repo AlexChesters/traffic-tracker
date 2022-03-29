@@ -8,8 +8,8 @@ def handler(event, _context = None):
             url = "https://m.highwaysengland.co.uk/feeds/rss/CurrentAndFutureEvents.xml"
         else:
             raise ValueError("unrecognised type received")
-    except KeyError:
-        raise ValueError("no type provided")
+    except KeyError as ex:
+        raise ValueError("no type provided") from ex
 
     feed = feedparser.parse(url)
     return feed["entries"]
