@@ -106,6 +106,7 @@ Resources:
                   "States": {
                     "FetchUnplannedFeed": {
                       "Type": "Task",
+                      "End": true,
                       "Resource": "arn:aws:states:::lambda:invoke",
                       "Parameters": {
                         "FunctionName": "${FetchFeedFunction.Arn}",
@@ -121,6 +122,7 @@ Resources:
                   "States": {
                     "FetchPlannedFeed": {
                       "Type": "Task",
+                      "End": true,
                       "Resource": "arn:aws:states:::lambda:invoke",
                       "Parameters": {
                         "FunctionName": "${FetchFeedFunction.Arn}",
@@ -133,7 +135,7 @@ Resources:
                   "StartAt": "FetchPlannedFeed"
                 }
               ]
-            },
+            }
           },
           "StartAt": "FetchFeeds"
         }
