@@ -98,44 +98,14 @@ Resources:
       DefinitionString: !Sub |
         {
           "States": {
-            "FetchFeeds": {
-              "Type": "Parallel",
+            "FetchFeed": {
+              "Type": "Task",
               "End": true,
-              "Branches": [
-                {
-                  "States": {
-                    "FetchUnplannedFeed": {
-                      "Type": "Task",
-                      "End": true,
-                      "Resource": "arn:aws:states:::lambda:invoke",
-                      "Parameters": {
-                        "FunctionName": "${FetchFeedFunction.Arn}",
-                        "Payload": {
-                          "type": "unplanned"
-                        }
-                      }
-                    }
-                  },
-                  "StartAt": "FetchUnplannedFeed"
-                },
-                {
-                  "States": {
-                    "FetchPlannedFeed": {
-                      "Type": "Task",
-                      "End": true,
-                      "Resource": "arn:aws:states:::lambda:invoke",
-                      "Parameters": {
-                        "FunctionName": "${FetchFeedFunction.Arn}",
-                        "Payload": {
-                          "type": "planned"
-                        }
-                      }
-                    }
-                  },
-                  "StartAt": "FetchPlannedFeed"
-                }
-              ]
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "Parameters": {
+                "FunctionName": "${FetchFeedFunction.Arn}"
+              }
             }
           },
-          "StartAt": "FetchFeeds"
+          "StartAt": "FetchFeed"
         }
