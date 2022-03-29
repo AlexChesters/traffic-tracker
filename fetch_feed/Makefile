@@ -9,8 +9,11 @@ install:
 			poetry install \
 	)
 
+shell:
+	poetry shell
+
 run:
-	poetry run handler
+	python3 fetch_feed/main.py
 
 test: install
 	( \
