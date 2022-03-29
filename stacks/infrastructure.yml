@@ -47,6 +47,28 @@ Resources:
       Role: !GetAtt FetchFeedRole.Arn
       MemorySize: 128
       Timeout: 180
+  AdaptFeedRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+  AdaptFeedFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: adapt_feed.main.handler
+      Runtime: python3.9
+      CodeUri: ../adapt_feed/build
+      Role: !GetAtt AdaptFeedRole.Arn
+      MemorySize: 128
+      Timeout: 15
   StateMachineRole:
     Type: AWS::IAM::Role
     Properties:
@@ -67,6 +89,7 @@ Resources:
                 Action: lambda:InvokeFunction
                 Resource:
                   - !GetAtt FetchFeedFunction.Arn
+                  - !GetAtt AdaptFeedFunction.Arn
   StateMachine:
     Type: AWS::StepFunctions::StateMachine
     Properties:
@@ -78,6 +101,16 @@ Resources:
             "FetchFeed": {
               "Type": "Task",
               "Resource": "arn:aws:states:::lambda:invoke",
+              "ResultPath": "$",
+              "Parameters": {
+                "FunctionName": "${FetchFeedFunction.Arn}"
+              },
+              "Next": "AdaptFeed"
+            },
+            "AdaptFeed": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "InputPath": "$",
               "ResultPath": "$",
               "Parameters": {
                 "FunctionName": "${FetchFeedFunction.Arn}"
