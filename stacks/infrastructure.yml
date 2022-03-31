@@ -47,7 +47,7 @@ Resources:
       Role: !GetAtt FetchFeedRole.Arn
       MemorySize: 128
       Timeout: 180
-  AdaptFeedRole:
+  AdaptItemRole:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
@@ -60,13 +60,13 @@ Resources:
               - sts:AssumeRole
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-  AdaptFeedFunction:
+  AdaptItemFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: adapt_feed.main.handler
+      Handler: adapt_item.main.handler
       Runtime: python3.9
-      CodeUri: ../adapt_feed/build
-      Role: !GetAtt AdaptFeedRole.Arn
+      CodeUri: ../adapt_item/build
+      Role: !GetAtt AdaptItemRole.Arn
       MemorySize: 128
       Timeout: 15
   StateMachineRole:
@@ -89,7 +89,7 @@ Resources:
                 Action: lambda:InvokeFunction
                 Resource:
                   - !GetAtt FetchFeedFunction.Arn
-                  - !GetAtt AdaptFeedFunction.Arn
+                  - !GetAtt AdaptItemFunction.Arn
   StateMachine:
     Type: AWS::StepFunctions::StateMachine
     Properties:

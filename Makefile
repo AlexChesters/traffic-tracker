@@ -2,15 +2,15 @@
 
 clean:
 	cd fetch_feed && $(MAKE) clean
-	cd adapt_feed && $(MAKE) clean
+	cd adapt_item && $(MAKE) clean
 
 test:
 	cd fetch_feed && $(MAKE) test
-	cd adapt_feed && $(MAKE) test
+	cd adapt_item && $(MAKE) test
 
 package:
 	cd fetch_feed && $(MAKE) package
-	cd adapt_feed && $(MAKE) package
+	cd adapt_item && $(MAKE) package
 
 install_poetry:
 	( \

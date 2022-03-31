@@ -8,6 +8,6 @@ def handler(_event = None, _context = None):
 
 if __name__ == "__main__":
     result = handler({}, None)
-    with open("../adapt_feed/stub-data.json", "w", encoding="utf-8") as f:
+    with open("../adapt_item/stub-data.json", "w", encoding="utf-8") as f:
         json.dump(result, f)
     print(result)
