@@ -110,6 +110,7 @@ Resources:
             "AdaptItems": {
               "Type": "Map",
               "InputPath": "$",
+              "ResultPath": "$",
               "MaxConcurrency": 2,
               "End": true,
               "Iterator": {
