@@ -141,9 +141,6 @@ Resources:
                 "Item": {
                   "Timestamp": {
                     "S.$": "$$.State.EnteredTime"
-                  },
-                  "Items": {
-                    "L.$": "$"
                   }
                 }
               }
