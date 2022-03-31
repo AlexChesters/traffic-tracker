@@ -100,11 +100,27 @@ Resources:
           "States": {
             "FetchFeed": {
               "Type": "Task",
-              "End": true,
               "Resource": "arn:aws:states:::lambda:invoke",
               "OutputPath": "$.Payload",
               "Parameters": {
                 "FunctionName": "${FetchFeedFunction.Arn}"
+              },
+              "Next": "AdaptItems"
+            },
+            "AdaptItems": {
+              "Type": "Map",
+              "InputPath": "$",
+              "MaxConcurrency": 2,
+              "End": true,
+              "Iterator": {
+                "StartAt": "AdaptItem",
+                "States": {
+                  AdaptItem: {
+                    "Type": "Task",
+                    "Resource": "${AdaptItemFunction.Arn}",
+                    "End": true
+                  }
+                }
               }
             }
           },
