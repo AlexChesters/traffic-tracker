@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "adapt_feed"
+name = "adapt_item"
 version = "0.0.1"
 description = "traffic tracker step for adapting the initial XML feed"
 authors = ["Alex Chesters"]

@@ -10,7 +10,7 @@ install:
 	)
 
 run:
-	poetry run python3 adapt_feed/main.py
+	poetry run python3 adapt_item/main.py
 
 test: install
 	( \
@@ -19,7 +19,7 @@ test: install
 			export AWS_SESSION_TOKEN='testing' && \
 			export AWS_SECURITY_TOKEN='testing' && \
 			export PATH="${HOME}/.poetry/bin:${PATH}" && \
-			poetry run pylint adapt_feed \
+			poetry run pylint adapt_item \
 	)
 
 package: clean install test

@@ -6,4 +6,4 @@ export VENV_PATH=$(poetry env info -p)
 poetry install --no-dev
 mkdir build
 cp -R ${VENV_PATH}/lib/python3.*/site-packages/* build/
-cp -R adapt_feed/ build/
+cp -R adapt_item/ build/
