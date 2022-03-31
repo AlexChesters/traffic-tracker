@@ -115,7 +115,7 @@ Resources:
               "Iterator": {
                 "StartAt": "AdaptItem",
                 "States": {
-                  AdaptItem: {
+                  "AdaptItem": {
                     "Type": "Task",
                     "Resource": "${AdaptItemFunction.Arn}",
                     "End": true
