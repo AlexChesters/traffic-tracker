@@ -1,9 +1,17 @@
 import json
+import pprint
 
 def handler(event, _context = None):
-    print(event["road"])
-    return event
+    return {
+        "title": event["title"],
+        "road": event["road"],
+        "region": event["region"],
+        "county": event["county"],
+        "latitude": float(event["latitude"]),
+        "longitude": float(event["longitude"]),
+    }
 
 if __name__ == "__main__":
     with open("stub-data.json", "r", encoding="utf-8") as f:
-        print(handler(json.load(f)[0], None))
+        pp = pprint.PrettyPrinter(indent=2)
+        pp.pprint(handler(json.load(f)[0], None))
