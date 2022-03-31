@@ -140,7 +140,7 @@ Resources:
                 "TableName": "${Table}",
                 "Item": {
                   "Timestamp": {
-                    "S.$": "$$.State.EnteredTime
+                    "S.$": "$$.State.EnteredTime"
                   },
                   "Items": {
                     "L.$": "$"
