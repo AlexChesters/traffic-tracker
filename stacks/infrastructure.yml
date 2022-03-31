@@ -90,6 +90,13 @@ Resources:
                 Resource:
                   - !GetAtt FetchFeedFunction.Arn
                   - !GetAtt AdaptItemFunction.Arn
+        - PolicyName: dynamo-policy
+          PolicyDocument:
+            Statement:
+              - Action:
+                  - dynamodb:PutItem
+                Resource: !GetAtt Table.Arn
+                Effect: Allow
   StateMachine:
     Type: AWS::StepFunctions::StateMachine
     Properties:
@@ -112,7 +119,7 @@ Resources:
               "InputPath": "$",
               "ResultPath": "$",
               "MaxConcurrency": 2,
-              "End": true,
+              "Next": "WriteToTable",
               "Iterator": {
                 "StartAt": "AdaptItem",
                 "States": {
@@ -120,6 +127,23 @@ Resources:
                     "Type": "Task",
                     "Resource": "${AdaptItemFunction.Arn}",
                     "End": true
+                  }
+                }
+              }
+            },
+            "WriteToTable": {
+              "Type": "Task",
+              "InputPath": "$",
+              "End": true,
+              "Resource": "arn:aws:states:::dynamodb:putItem",
+              "Parameters": {
+                "TableName": "${Table}",
+                "Item": {
+                  "Timestamp": {
+                    "S.$": "$$.State.EnteredTime
+                  },
+                  "Items": {
+                    "L.$": "$"
                   }
                 }
               }
