@@ -7,6 +7,7 @@ import boto3
 client = boto3.client('dynamodb')
 
 def handler(event, _context = None):
+    print(f"event: {event}")
     response = client.put_item(
         TableName=os.environ["TABLE_NAME"],
         Item={
