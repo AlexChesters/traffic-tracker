@@ -65,7 +65,7 @@ Resources:
           - Value: !Ref StateMachineInterimBucket
             Name: BUCKET
             Type: PLAINTEXT
-      Name: traffic-tracker
+      Name: !Sub "{Environment}-traffic-tracker-website"
       ServiceRole: !GetAtt CodeBuildRole.Arn
       Source:
         Type: CODEPIPELINE
