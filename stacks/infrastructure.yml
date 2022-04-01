@@ -108,7 +108,7 @@ Resources:
             "FetchFeed": {
               "Type": "Task",
               "Resource": "arn:aws:states:::lambda:invoke",
-              "OutputPath": "$,
+              "OutputPath": "$",
               "Parameters": {
                 "FunctionName": "${FetchFeedFunction.Arn}"
               },
