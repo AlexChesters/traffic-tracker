@@ -6,12 +6,11 @@ phases:
       nodejs: 14
   build:
     commands:
+      - apt-get update -y && apt-get install jq -y
       - cd website
       - npm ci
       - npm t
-      - npm run build:prod
-      - aws sts assume-role --role-arn arn:aws:iam::008356366354:role/projects-live-bucket-BucketUploadRole-1USRJUF87S00F --role-session-name "$PROJECT_NAME-$CODEBUILD_BUILD_NUMBER"
-      - aws s3 sync build s3://projects-live-bucket-bucket-llkgmktc4xmo/traffic-tracker --cache-control max-age=60 --acl public-read --delete
+      - sh package.sh
 artifacts:
   files:
     - "**/*"
