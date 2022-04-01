@@ -258,7 +258,7 @@ Resources:
   StateMachineSchedule:
     Type: AWS::Events::Rule
     Properties:
-      Description: Invoke in the early hours of each morning
+      Description: Invoke every hour on the hour
       ScheduleExpression: cron(0 * * * ? *)
       State: ENABLED
       Targets:
