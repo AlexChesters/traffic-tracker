@@ -4,19 +4,14 @@ from decimal import Decimal
 
 import boto3
 
-client = boto3.client('dynamodb')
+dynamodb = boto3.resource('dynamodb',region_name='eu-west-1')
 
 def handler(event, _context = None):
-    print(f"event: {event}")
-    response = client.put_item(
-        TableName=os.environ["TABLE_NAME"],
+    table = dynamodb.Table(os.environ["TABLE_NAME"])
+    response = table.put_item(
         Item={
-            'timestamp': {
-                "S": event["timestamp"]
-            },
-            'items': {
-                "L": json.loads(json.dumps(event["results"]), parse_float=Decimal)
-            }
+            'timestamp': event["timestamp"],
+            'items': json.loads(json.dumps(event["results"]), parse_float=Decimal)
         }
     )
     print(response)
