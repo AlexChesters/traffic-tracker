@@ -3,14 +3,17 @@
 clean:
 	cd fetch_feed && $(MAKE) clean
 	cd adapt_item && $(MAKE) clean
+	cd write_to_table && $(MAKE) clean
 
 test:
 	cd fetch_feed && $(MAKE) test
 	cd adapt_item && $(MAKE) test
+	cd write_to_table && $(MAKE) test
 
 package:
 	cd fetch_feed && $(MAKE) package
 	cd adapt_item && $(MAKE) package
+	cd write_to_table && $(MAKE) package
 
 install_poetry:
 	( \
