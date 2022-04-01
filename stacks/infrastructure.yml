@@ -289,7 +289,7 @@ Resources:
               "Resource": "${ReadFromTableFunction.Arn}",
               "InputPath": "$",
               "ResultPath": "$.results",
-              "OutputPath": "$.results"
+              "OutputPath": "$.results",
               "Next": "PublishWebsite"
             },
             "PublishWebsite": {
