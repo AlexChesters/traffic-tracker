@@ -134,18 +134,16 @@ Resources:
           "States": {
             "FetchFeed": {
               "Type": "Task",
-              "Resource": "arn:aws:states:::lambda:invoke",
-              "OutputPath": "$",
-              "Parameters": {
-                "FunctionName": "${FetchFeedFunction.Arn}"
-              },
+              "Resource": "${FetchFeedFunction.Arn}",
+              "ResultPath": "$.feed",
+              "OutputPath": "$.feed",
               "Next": "AdaptItems"
             },
             "AdaptItems": {
               "Type": "Map",
-              "InputPath": "$.Payload.results",
-              "ResultPath": "$.Payload.results",
-              "OutputPath": "$.Payload",
+              "InputPath": "$.results",
+              "ResultPath": "$.results",
+              "OutputPath": "$",
               "MaxConcurrency": 2,
               "Next": "WriteToTable",
               "Iterator": {
@@ -161,12 +159,9 @@ Resources:
             },
             "WriteToTable": {
               "Type": "Task",
-              "Resource": "arn:aws:states:::lambda:invoke",
+              "Resource": "${WriteToTableFunction.Arn}",
               "InputPath": "$",
-              "End": true,
-              "Parameters": {
-                "FunctionName": "${WriteToTableFunction.Arn}"
-              }
+              "End": true
             }
           },
           "StartAt": "FetchFeed"

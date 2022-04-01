@@ -12,7 +12,7 @@ def handler(event, _context = None):
         TableName=os.environ["TABLE_NAME"],
         Item={
             'timestamp': event["timestamp"],
-            'items': json.loads(json.dumps(event["items"]), parse_float=Decimal)
+            'items': json.loads(json.dumps(event["results"]), parse_float=Decimal)
         }
     )
     print(response)
