@@ -99,6 +99,9 @@ Resources:
       Role: !GetAtt WriteToTableRole.Arn
       MemorySize: 128
       Timeout: 15
+      Environment:
+        Variables:
+          TABLE_NAME: !Ref Table
   StateMachineRole:
     Type: AWS::IAM::Role
     Properties:
@@ -161,10 +164,7 @@ Resources:
               "InputPath": "$.Payload",
               "End": true,
               "Parameters": {
-                "FunctionName": "${WriteToTableFunction.Arn}",
-                "Payload": {
-                  "$.table_name": "${Table}"
-                }
+                "FunctionName": "${WriteToTableFunction.Arn}"
               }
             }
           },
