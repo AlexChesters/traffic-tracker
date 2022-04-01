@@ -161,7 +161,10 @@ Resources:
               "InputPath": "$.Payload",
               "End": true,
               "Parameters": {
-                "FunctionName": "${WriteToTableFunction.Arn}"
+                "FunctionName": "${WriteToTableFunction.Arn}",
+                "Payload": {
+                  "$.table_name": "${Table}"
+                }
               }
             }
           },
