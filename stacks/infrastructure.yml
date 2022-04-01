@@ -46,8 +46,10 @@ Resources:
                 - sts:AssumeRole
                 - sts:TagSession
               Effect: Allow
-              Resource:
+              Resource: !If
+                - IsLive
                 - arn:aws:iam::008356366354:role/projects-live-bucket-BucketUploadRole-1USRJUF87S00F
+                - arn:aws:iam::008356366354:role/projects-test-bucket-BucketUploadRole-1KY87JZ8HN0J9
   CodeBuildProject:
     Type: AWS::CodeBuild::Project
     Properties:
@@ -68,6 +70,12 @@ Resources:
                 - IsLive
                 - projects-live-bucket-bucket-llkgmktc4xmo
                 - projects-test-bucket-bucket-fmse77ttyujy
+              Type: PLAINTEXT
+            - Name: UPLOAD_ROLE
+              Value: !If
+                - IsLive
+                - arn:aws:iam::008356366354:role/projects-live-bucket-BucketUploadRole-1USRJUF87S00F
+                - arn:aws:iam::008356366354:role/projects-test-bucket-BucketUploadRole-1KY87JZ8HN0J9
               Type: PLAINTEXT
       Name: !Sub "${Environment}-traffic-tracker-website"
       ServiceRole: !GetAtt CodeBuildRole.Arn

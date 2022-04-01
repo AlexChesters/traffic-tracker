@@ -3,7 +3,7 @@ set -e
 npm run build:prod
 
 CREDENTIALS=$(aws sts assume-role \
-                  --role-arn arn:aws:iam::008356366354:role/projects-live-bucket-BucketUploadRole-1USRJUF87S00F \
+                  --role-arn "$UPLOAD_ROLE" \
                   --role-session-name "$$PROJECT_NAME-$CODEBUILD_BUILD_NUMBER")
 export AWS_ACCESS_KEY_ID=$(echo $CREDENTIALS | jq -r .Credentials.AccessKeyId)
 export AWS_SECRET_ACCESS_KEY=$(echo $CREDENTIALS | jq -r .Credentials.SecretAccessKey)
