@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "read_from_table"
+version = "0.0.1"
+description = "traffic tracker step for reading the adapted feed from dynamodb"
+authors = ["Alex Chesters"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = ">=3.9,<4.0"
+boto3 = "^1.21.31"
+
+[tool.poetry.dev-dependencies]
+pylint = "^2.7.4"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
