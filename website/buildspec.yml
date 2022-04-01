@@ -10,7 +10,8 @@ phases:
       - npm ci
       - npm t
       - npm run build:prod
-      - aws s3 cp build s3://$BUCKET --cache-control max-age=60 --acl public-read --recursive
+      - aws sts assume-role arn:aws:iam::008356366354:role/projects-live-bucket-BucketUploadRole-1USRJUF87S00F
+      - aws s3 sync build s3://projects-live-bucket-bucket-llkgmktc4xmo/traffic-tracker --cache-control max-age=60 --acl public-read --delete
 artifacts:
   files:
     - "**/*"
