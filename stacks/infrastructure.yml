@@ -141,7 +141,7 @@ Resources:
             "AdaptItems": {
               "Type": "Map",
               "InputPath": "$.Payload.results",
-              "ResultPath": "$.Payload.results,
+              "ResultPath": "$.Payload.results",
               "MaxConcurrency": 2,
               "Next": "WriteToTable",
               "Iterator": {
