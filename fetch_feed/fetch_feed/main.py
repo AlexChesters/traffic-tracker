@@ -1,10 +1,14 @@
 import json
+import datetime
 
 import feedparser
 
 def handler(_event = None, _context = None):
     feed = feedparser.parse("https://m.highwaysengland.co.uk/feeds/rss/UnplannedEvents.xml")
-    return feed["entries"]
+    return {
+        "timestamp": datetime.datetime.utcnow().replace(microsecond=0).isoformat(),
+        "results": feed["entries"]
+    }
 
 if __name__ == "__main__":
     result = handler({}, None)

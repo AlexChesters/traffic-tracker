@@ -108,7 +108,7 @@ Resources:
             "FetchFeed": {
               "Type": "Task",
               "Resource": "arn:aws:states:::lambda:invoke",
-              "OutputPath": "$.Payload",
+              "OutputPath": "$,
               "Parameters": {
                 "FunctionName": "${FetchFeedFunction.Arn}"
               },
@@ -116,10 +116,10 @@ Resources:
             },
             "AdaptItems": {
               "Type": "Map",
-              "InputPath": "$",
-              "ResultPath": "$",
+              "InputPath": "$.Payload.results",
+              "ResultPath": "$.Items",
               "MaxConcurrency": 2,
-              "Next": "WriteToTable",
+              "End": true,
               "Iterator": {
                 "StartAt": "AdaptItem",
                 "States": {
@@ -127,20 +127,6 @@ Resources:
                     "Type": "Task",
                     "Resource": "${AdaptItemFunction.Arn}",
                     "End": true
-                  }
-                }
-              }
-            },
-            "WriteToTable": {
-              "Type": "Task",
-              "InputPath": "$",
-              "End": true,
-              "Resource": "arn:aws:states:::dynamodb:putItem",
-              "Parameters": {
-                "TableName": "${Table}",
-                "Item": {
-                  "Timestamp": {
-                    "S.$": "$$.State.EnteredTime"
                   }
                 }
               }

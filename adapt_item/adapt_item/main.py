@@ -14,4 +14,4 @@ def handler(event, _context = None):
 if __name__ == "__main__":
     with open("stub-data.json", "r", encoding="utf-8") as f:
         pp = pprint.PrettyPrinter(indent=2)
-        pp.pprint(handler(json.load(f)[0], None))
+        pp.pprint(handler(json.load(f)["results"][0], None))
