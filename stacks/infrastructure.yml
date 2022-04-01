@@ -145,6 +145,7 @@ Resources:
               "Type": "Map",
               "InputPath": "$.Payload.results",
               "ResultPath": "$.Payload.results",
+              "OutputPath": "$.Payload",
               "MaxConcurrency": 2,
               "Next": "WriteToTable",
               "Iterator": {
@@ -161,7 +162,7 @@ Resources:
             "WriteToTable": {
               "Type": "Task",
               "Resource": "arn:aws:states:::lambda:invoke",
-              "InputPath": "$.Payload",
+              "InputPath": "$",
               "End": true,
               "Parameters": {
                 "FunctionName": "${WriteToTableFunction.Arn}"
