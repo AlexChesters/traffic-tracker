@@ -11,8 +11,12 @@ def handler(event, _context = None):
     response = client.put_item(
         TableName=os.environ["TABLE_NAME"],
         Item={
-            'timestamp': event["timestamp"],
-            'items': json.loads(json.dumps(event["results"]), parse_float=Decimal)
+            'timestamp': {
+                "S": event["timestamp"]
+            },
+            'items': {
+                "L": json.loads(json.dumps(event["results"]), parse_float=Decimal)
+            }
         }
     )
     print(response)
