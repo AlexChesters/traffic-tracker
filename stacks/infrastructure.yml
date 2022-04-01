@@ -57,9 +57,9 @@ Resources:
         Image: aws/codebuild/standard:5.0
         Type: LINUX_CONTAINER
         EnvironmentVariables:
-          - Value: !Ref StateMachineInterimBucket
-            Name: BUCKET
-            Type: PLAINTEXT
+            - Name: PROJECT_NAME
+              Value: !Sub "${Environment}-traffic-tracker-website"
+              Type: PLAINTEXT
       Name: !Sub "${Environment}-traffic-tracker-website"
       ServiceRole: !GetAtt CodeBuildRole.Arn
       Source:
