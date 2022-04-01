@@ -192,6 +192,13 @@ Resources:
                     - codebuild:BatchGetBuilds
                   Resource:
                     - !GetAtt CodeBuildProject.Arn
+                - Effect: Allow
+                  Action:
+                    - events:PutTargets
+                    - events:PutRule
+                    - events:DescribeRule
+                  Resource:
+                    - !Sub 'arn:aws:events:${AWS::Region}:${AWS::AccountId}:rule/StepFunctionsGetEventForCodeBuildStartBuildRule'
   StateMachine:
     Type: AWS::StepFunctions::StateMachine
     Properties:
