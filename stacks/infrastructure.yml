@@ -282,6 +282,7 @@ Resources:
               "Type": "Task",
               "Resource": "${WriteToTableFunction.Arn}",
               "InputPath": "$",
+              "OutputPath": "$",
               "Next": "ReadFromTable"
             },
             "ReadFromTable": {
