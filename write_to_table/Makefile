@@ -23,4 +23,4 @@ test: install
 	)
 
 package: clean install test
-	bash package.sh
+	sh package.sh

@@ -1,4 +1,4 @@
-#!/bin/bash
+set -e
 
 export PATH="${HOME}/.poetry/bin:${PATH}"
 export VENV_PATH=$(poetry env info -p)
