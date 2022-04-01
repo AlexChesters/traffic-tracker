@@ -42,6 +42,7 @@ Resources:
             Statement:
               Action:
                 - sts:AssumeRole
+                - sts:TagSession
               Effect: Allow
               Resource:
                 - arn:aws:iam::008356366354:role/projects-live-bucket-BucketUploadRole-1USRJUF87S00F
