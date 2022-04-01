@@ -241,7 +241,6 @@ Resources:
               "Type": "Task",
               "Resource": "arn:aws:states:::codebuild:startBuild.sync",
               "End": true,
-              "ResultPath": "$.BuildOutput",
               "Parameters": {
                 "ProjectName": "${CodeBuildProject}"
               }
