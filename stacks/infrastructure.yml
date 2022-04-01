@@ -69,6 +69,36 @@ Resources:
       Role: !GetAtt AdaptItemRole.Arn
       MemorySize: 128
       Timeout: 15
+  WriteToTableRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      Policies:
+        - PolicyName: dynamo-policy
+          PolicyDocument:
+            Statement:
+              - Action:
+                  - dynamodb:PutItem
+                Resource: !GetAtt Table.Arn
+                Effect: Allow
+  WriteToTableFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: write_to_table.main.handler
+      Runtime: python3.9
+      CodeUri: ../write_to_table/build
+      Role: !GetAtt WriteToTableRole.Arn
+      MemorySize: 128
+      Timeout: 15
   StateMachineRole:
     Type: AWS::IAM::Role
     Properties:
@@ -90,13 +120,7 @@ Resources:
                 Resource:
                   - !GetAtt FetchFeedFunction.Arn
                   - !GetAtt AdaptItemFunction.Arn
-        - PolicyName: dynamo-policy
-          PolicyDocument:
-            Statement:
-              - Action:
-                  - dynamodb:PutItem
-                Resource: !GetAtt Table.Arn
-                Effect: Allow
+                  - !GetAtt WriteToTableFunction.Arn
   StateMachine:
     Type: AWS::StepFunctions::StateMachine
     Properties:
@@ -117,9 +141,9 @@ Resources:
             "AdaptItems": {
               "Type": "Map",
               "InputPath": "$.Payload.results",
-              "ResultPath": "$.Items",
+              "ResultPath": "$.Payload.results,
               "MaxConcurrency": 2,
-              "End": true,
+              "Next": "WriteToTable",
               "Iterator": {
                 "StartAt": "AdaptItem",
                 "States": {
@@ -129,6 +153,15 @@ Resources:
                     "End": true
                   }
                 }
+              }
+            },
+            "WriteToTable": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "InputPath": "$.Payload",
+              "End": true,
+              "Parameters": {
+                "FunctionName": "${WriteToTableFunction.Arn}"
               }
             }
           },
