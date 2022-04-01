@@ -11,7 +11,7 @@ export AWS_SESSION_TOKEN=$(echo $CREDENTIALS | jq -r .Credentials.SessionToken)
 
 aws s3 sync \
     build \
-    s3://projects-live-bucket-bucket-llkgmktc4xmo/traffic-tracker \
+    "s3://$BUCKET/traffic-tracker" \
     --cache-control max-age=60 \
     --acl public-read \
     --delete

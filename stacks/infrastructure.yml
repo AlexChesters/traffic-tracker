@@ -7,6 +7,8 @@ Parameters:
     AllowedValues:
       - test
       - live
+Conditions:
+  IsLive: !Equals [!Ref Environment, live]
 Resources:
   StateMachineInterimBucket:
     Type: AWS::S3::Bucket
@@ -60,6 +62,12 @@ Resources:
         EnvironmentVariables:
             - Name: PROJECT_NAME
               Value: !Sub "${Environment}-traffic-tracker-website"
+              Type: PLAINTEXT
+            - Name: BUCKET
+              Value: !If
+                - IsLive
+                - projects-live-bucket-bucket-llkgmktc4xmo
+                - projects-test-bucket-bucket-fmse77ttyujy
               Type: PLAINTEXT
       Name: !Sub "${Environment}-traffic-tracker-website"
       ServiceRole: !GetAtt CodeBuildRole.Arn
