@@ -14,7 +14,7 @@ def handler(event, _context = None):
             'Results': json.loads(json.dumps(event["results"]), parse_float=Decimal)
         }
     )
-    print(response)
+    return response
 
 if __name__ == "__main__":
     print("cannot run write_to_table locally, doing nothing...")
