@@ -49,12 +49,7 @@ Resources:
     Type: AWS::CodeBuild::Project
     Properties:
       Artifacts:
-        Type: CODEPIPELINE
-        Location: !ImportValue core-infrastructure-eu-west-1-build-artifacts-bucket
-        Path: /artifacts/traffic-tracker-website/
-        Packaging: NONE
-        Name: build
-        NamespaceType: BUILD_ID
+        Type: NO_ARTIFACTS
       TimeoutInMinutes: 5
       Description: Builds traffic-tracker's website
       Environment:
@@ -68,7 +63,10 @@ Resources:
       Name: !Sub "${Environment}-traffic-tracker-website"
       ServiceRole: !GetAtt CodeBuildRole.Arn
       Source:
-        Type: CODEPIPELINE
+        Type: GITHUB
+        Auth:
+          Type: OAUTH
+        Location: https://github.com/AlexChesters/traffic-tracker.git
         BuildSpec: website/buildspec.yml
   Table:
     Type: AWS::DynamoDB::Table
