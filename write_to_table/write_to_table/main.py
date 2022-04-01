@@ -10,8 +10,8 @@ def handler(event, _context = None):
     table = dynamodb.Table(os.environ["TABLE_NAME"])
     response = table.put_item(
         Item={
-            'timestamp': event["timestamp"],
-            'items': json.loads(json.dumps(event["results"]), parse_float=Decimal)
+            'Timestamp': event["timestamp"],
+            'Results': json.loads(json.dumps(event["results"]), parse_float=Decimal)
         }
     )
     print(response)
