@@ -179,13 +179,19 @@ Resources:
           PolicyDocument:
             Version: 2012-10-17
             Statement:
-              - Sid: LambdaStatement
-                Effect: Allow
-                Action: lambda:InvokeFunction
-                Resource:
-                  - !GetAtt FetchFeedFunction.Arn
-                  - !GetAtt AdaptItemFunction.Arn
-                  - !GetAtt WriteToTableFunction.Arn
+                - Effect: Allow
+                  Action: lambda:InvokeFunction
+                  Resource:
+                    - !GetAtt FetchFeedFunction.Arn
+                    - !GetAtt AdaptItemFunction.Arn
+                    - !GetAtt WriteToTableFunction.Arn
+                - Effect: Allow
+                  Action:
+                    - codebuild:StartBuild
+                    - codebuild:StopBuild
+                    - codebuild:BatchGetBuilds
+                  Resource:
+                    - !GetAtt CodeBuildProject.Arn
   StateMachine:
     Type: AWS::StepFunctions::StateMachine
     Properties:
