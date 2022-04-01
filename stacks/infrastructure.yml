@@ -69,7 +69,7 @@ Resources:
       ServiceRole: !GetAtt CodeBuildRole.Arn
       Source:
         Type: CODEPIPELINE
-        BuildSpec: buildspec.yml
+        BuildSpec: website/buildspec.yml
   Table:
     Type: AWS::DynamoDB::Table
     DeletionPolicy: Retain
