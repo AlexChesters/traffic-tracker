@@ -1,11 +1,18 @@
 import os
 import datetime
 import json
+from decimal import Decimal
 
 import boto3
 
 dynamodb = boto3.resource('dynamodb', region_name='eu-west-1')
 s3 = boto3.resource('s3')
+
+class DecimalEncoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, Decimal):
+            return str(o)
+        return json.JSONEncoder.default(self, o)
 
 def handler(event = None, _context = None):
     table = dynamodb.Table(os.environ["TABLE_NAME"])
@@ -21,7 +28,7 @@ def handler(event = None, _context = None):
     obj_key = f"{date_part}/{execution_id}"
     obj = s3.Object(os.environ["BUCKET_NAME"], obj_key)
 
-    result = obj.put(Body=json.dumps(items))
+    result = obj.put(Body=json.dumps(items, cls=DecimalEncoder))
     print(result)
 
     return {
