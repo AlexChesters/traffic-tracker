@@ -190,12 +190,16 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
       Policies:
-        - PolicyName: dynamo-policy
+        - PolicyName: read-from-table-policy
           PolicyDocument:
             Statement:
               - Action:
                   - dynamodb:Scan
                 Resource: !GetAtt Table.Arn
+                Effect: Allow
+              - Action:
+                  - s3:PutObject
+                Resource: !Sub "${StateMachineInterimBucket.Arn}/*"
                 Effect: Allow
   ReadFromTableFunction:
     Type: AWS::Serverless::Function
@@ -209,6 +213,7 @@ Resources:
       Environment:
         Variables:
           TABLE_NAME: !Ref Table
+          BUCKET_NAME: !Ref StateMachineInterimBucket
   StateMachineRole:
     Type: AWS::IAM::Role
     Properties:
@@ -316,11 +321,15 @@ Resources:
             },
             "ReadFromTable": {
               "Type": "Task",
-              "Resource": "${ReadFromTableFunction.Arn}",
+              "Resource": "arn:aws:states:::lambda:invoke",
               "InputPath": "$",
               "ResultPath": "$.results",
               "OutputPath": "$.results",
-              "Next": "PublishWebsite"
+              "Next": "PublishWebsite",
+              "Parameters": {
+                "FunctionName": "${ReadFromTableFunction.Arn}",
+                "ExecutionId": "$$.Execution.Id"
+              }
             },
             "PublishWebsite": {
               "Type": "Task",
