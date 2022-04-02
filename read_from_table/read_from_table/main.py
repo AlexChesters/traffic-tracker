@@ -18,11 +18,16 @@ def handler(event = None, _context = None):
 
     date_part = datetime.date.today().strftime('%Y/%m/%d')
     execution_id = event["ExecutionId"]
-    obj = s3.Object(os.environ["BUCKET_NAME"], f"{date_part}/{execution_id}")
+    obj_key = f"{date_part}/{execution_id}"
+    obj = s3.Object(os.environ["BUCKET_NAME"], obj_key)
 
     result = obj.put(Body=json.dumps(items))
+    print(result)
 
-    return result
+    return {
+        "bucket_name": os.environ["BUCKET_NAME"],
+        "key": obj_key
+    }
 
 if __name__ == "__main__":
     print("cannot run read_from_table locally, doing nothing...")

@@ -323,8 +323,8 @@ Resources:
               "Type": "Task",
               "Resource": "arn:aws:states:::lambda:invoke",
               "InputPath": "$",
-              "ResultPath": null,
-              "OutputPath": "$",
+              "ResultPath": "$.full_results",
+              "OutputPath": "$.full_results",
               "Next": "PublishWebsite",
               "Parameters": {
                 "FunctionName": "${ReadFromTableFunction.Arn}",
