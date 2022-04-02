@@ -328,7 +328,9 @@ Resources:
               "Next": "PublishWebsite",
               "Parameters": {
                 "FunctionName": "${ReadFromTableFunction.Arn}",
-                "ExecutionId": "$$.Execution.Id"
+                "Payload": {
+                  "ExecutionId.$": "$$.Execution.Id"
+                }
               }
             },
             "PublishWebsite": {
