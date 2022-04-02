@@ -245,6 +245,34 @@ Resources:
                     - events:DescribeRule
                   Resource:
                     - !Sub 'arn:aws:events:${AWS::Region}:${AWS::AccountId}:rule/StepFunctionsGetEventForCodeBuildStartBuildRule'
+  StateMachineScheduleRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action: sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service: events.amazonaws.com
+      Policies:
+        - PolicyName: step-function-policy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+                - Action: states:StartExecution
+                  Effect: Allow
+                  Resource: !Ref StateMachine
+  StateMachineSchedule:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: Invoke every hour on the hour
+      ScheduleExpression: cron(0 * * * ? *)
+      State: ENABLED
+      Targets:
+        - Id: StateMachine
+          Arn: !Ref StateMachine
+          RoleArn: !GetAtt StateMachineScheduleRole.Arn
   StateMachine:
     Type: AWS::StepFunctions::StateMachine
     Properties:
@@ -305,31 +333,3 @@ Resources:
           },
           "StartAt": "FetchFeed"
         }
-  StateMachineScheduleRole:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Action: sts:AssumeRole
-            Effect: Allow
-            Principal:
-              Service: events.amazonaws.com
-      Policies:
-        - PolicyName: step-function-policy
-          PolicyDocument:
-            Version: 2012-10-17
-            Statement:
-                - Action: states:StartExecution
-                  Effect: Allow
-                  Resource: !Ref StateMachine
-  StateMachineSchedule:
-    Type: AWS::Events::Rule
-    Properties:
-      Description: Invoke every hour on the hour
-      ScheduleExpression: cron(0 * * * ? *)
-      State: ENABLED
-      Targets:
-        - Id: StateMachine
-          Arn: !Ref StateMachine
-          RoleArn: !GetAtt StateMachineScheduleRole.Arn
