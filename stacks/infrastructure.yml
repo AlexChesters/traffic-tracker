@@ -45,14 +45,18 @@ Resources:
       ManagedPolicyArns:
         - !ImportValue core-infrastructure-global-codebuild-base-policy-arn
       Policies:
-        - PolicyName: sts-policy
+        - PolicyName: traffic-tracker-website-policy
           PolicyDocument:
             Statement:
-              Action:
-                - sts:AssumeRole
-                - sts:TagSession
-              Effect: Allow
-              Resource: !FindInMap [EnvironmentMap, !Ref Environment, UPLOADROLE]
+              - Action:
+                  - sts:AssumeRole
+                  - sts:TagSession
+                Effect: Allow
+                Resource: !FindInMap [EnvironmentMap, !Ref Environment, UPLOADROLE]
+              - Action:
+                  - s3:GetObject
+                Effect: Allow
+                Resource: !Sub "{StateMachineInterimBucket.Arn}/*"
   CodeBuildProject:
     Type: AWS::CodeBuild::Project
     Properties:
@@ -336,9 +340,22 @@ Resources:
             "PublishWebsite": {
               "Type": "Task",
               "Resource": "arn:aws:states:::codebuild:startBuild.sync",
+              "InputPath": "$.Payload",
               "End": true,
               "Parameters": {
-                "ProjectName": "${CodeBuildProject}"
+                "ProjectName": "${CodeBuildProject}",
+                "EnvironmentVariablesOverride": [
+                  {
+                    "Name": "DATA_BUCKET_NAME",
+                    "Value.$": "$.bucket_name",
+                    "Type": "PLAINTEXT"
+                  },
+                  {
+                    "Name": "DATA_FILE_KEY",
+                    "Value.$": "$.key",
+                    "Type": "PLAINTEXT"
+                  }
+                ]
               }
             }
           },
