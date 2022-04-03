@@ -56,7 +56,7 @@ Resources:
               - Action:
                   - s3:GetObject
                 Effect: Allow
-                Resource: !Sub "{StateMachineInterimBucket.Arn}/*"
+                Resource: !Sub "${StateMachineInterimBucket.Arn}/*"
   CodeBuildProject:
     Type: AWS::CodeBuild::Project
     Properties:
