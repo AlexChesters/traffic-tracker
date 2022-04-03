@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react'
 
-import Example from './components/Example'
-
 const Home = () => {
   const [data, setData] = useState([])
 
   async function fetchData () {
     let rawData = []
+
     if (process.env.NODE_ENV !== 'production') {
       const response = await import('../../stub-data.json')
       rawData = response.default
@@ -14,6 +13,7 @@ const Home = () => {
       const response = await import('../../data.json')
       rawData = response.default
     }
+
     const adapted = rawData.sort((a, b) => new Date(b.Timestamp) - new Date(a.Timestamp))
     setData(adapted)
   }
