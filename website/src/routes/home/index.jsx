@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 
 const Home = () => {
-  const [data, setData] = useState([])
+  const [data, setData] = useState(null)
 
   async function fetchData () {
     let rawData = []
@@ -15,21 +15,26 @@ const Home = () => {
     }
 
     const adapted = rawData.sort((a, b) => new Date(b.Timestamp) - new Date(a.Timestamp))
-    setData(adapted)
+    setData(adapted[0])
   }
 
   useEffect(() => {
     fetchData()
   }, [])
 
+  if (!data) return null
+
   return (
     <section>
       {
-        data.map((item, index) => (
-          <p key={index}>
-            {item.Timestamp}
-          </p>
-        ))
+        data.Results.map((item, index) => {
+          console.log(item)
+          return (
+            <p key={index}>
+              {item.title}
+            </p>
+          )
+        })
       }
     </section>
   )
