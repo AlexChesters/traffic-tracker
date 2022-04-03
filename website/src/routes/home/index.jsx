@@ -6,13 +6,16 @@ const Home = () => {
   const [data, setData] = useState([])
 
   async function fetchData () {
+    let rawData = []
     if (process.env.NODE_ENV !== 'production') {
       const response = await import('../../stub-data.json')
-      setData(response.default)
+      rawData = response.default
     } else {
       const response = await import('../../data.json')
-      setData(response.default)
+      rawData = response.default
     }
+    const adapted = rawData.sort((a, b) => new Date(b.Timestamp) - new Date(a.Timestamp))
+    setData(adapted)
   }
 
   useEffect(() => {
