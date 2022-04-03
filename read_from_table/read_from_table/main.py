@@ -25,7 +25,7 @@ def handler(event = None, _context = None):
 
     date_part = datetime.date.today().strftime('%Y/%m/%d')
     execution_id = event["ExecutionId"]
-    obj_key = f"{date_part}/{execution_id}"
+    obj_key = f"{date_part}/{execution_id}.json"
     obj = s3.Object(os.environ["BUCKET_NAME"], obj_key)
 
     result = obj.put(Body=json.dumps(items, cls=DecimalEncoder))
