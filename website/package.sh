@@ -1,7 +1,7 @@
 set -e
 
 npm run build:prod
-aws s3 cp "s3://$DATA_BUCKET_NAME/$DATA_FILE_KEY" build/data.json
+aws s3 cp "s3://$DATA_BUCKET_NAME/$DATA_FILE_KEY" src/data.json
 
 CREDENTIALS=$(aws sts assume-role \
                   --role-arn "$UPLOAD_ROLE" \
