@@ -3,14 +3,15 @@ import React, { useState, useEffect } from 'react'
 import Example from './components/Example'
 
 const Home = () => {
-  const [data, setData] = useState({})
+  const [data, setData] = useState([])
 
   async function fetchData () {
     if (process.env.NODE_ENV !== 'production') {
       const response = await import('../../stub-data.json')
-      setData(JSON.parse(JSON.stringify(response)))
+      setData(response.default)
     } else {
-      setData(await import('../../data.json'))
+      const response = await import('../../data.json')
+      setData(response.default)
     }
   }
 
@@ -18,13 +19,16 @@ const Home = () => {
     fetchData()
   }, [])
 
-  console.log(data)
-
   return (
-    <Example
-      title={data.title}
-      subtitle={data.subtitle}
-    />
+    <section>
+      {
+        data.map((item, index) => (
+          <p key={index}>
+            {item.Timestamp}
+          </p>
+        ))
+      }
+    </section>
   )
 }
 
