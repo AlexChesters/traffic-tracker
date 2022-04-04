@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import Map, { Marker } from 'react-map-gl'
+import Map, { Marker, Popup } from 'react-map-gl'
 
 import MarkerImage from '../../static/marker.png'
 
@@ -9,6 +9,7 @@ import './index.scss'
 const Home = () => {
   const [data, setData] = useState(null)
   const [selectedIndex, setSelectedIndex] = useState(0)
+  const [popupInfo, setPopupInfo] = useState(null)
 
   const formatDate = (dateStr) => {
     const dateObj = new Date(dateStr)
@@ -58,18 +59,40 @@ const Home = () => {
         mapStyle='mapbox://styles/mapbox/streets-v9'
         mapboxAccessToken='pk.eyJ1IjoiY2pnNHQ4MXZqN3NvcTJxbXMyNzJueHdraiIsImEiOiJjbDFqbXR6bjgxeHF1M2NsbnZwY2czNXdmIn0.ys7kWJ0VGgCxxxXV52wgTA'
       >
-      {
-        data[selectedIndex].Results.map((item, index) => {
-          return (
-            <Marker key={index} latitude={item.latitude} longitude={item.longitude} anchor='bottom' >
-              <img
-                src={MarkerImage}
-                className='marker'
-              />
-            </Marker>
+        {
+          data[selectedIndex].Results.map((item, index) => {
+            return (
+              <Marker
+                key={index}
+                latitude={item.latitude}
+                longitude={item.longitude}
+                anchor='bottom'
+                onClick={() => setPopupInfo(item)}
+              >
+                <img
+                  src={MarkerImage}
+                  className='marker'
+                />
+              </Marker>
+            )
+          })
+        }
+        {
+          popupInfo && (
+            <Popup
+              className='popup'
+              latitude={popupInfo.latitude}
+              longitude={popupInfo.longitude}
+              anchor='bottom'
+              closeOnClick={false}
+              onClose={() => setPopupInfo(null)}
+            >
+              <div>
+                <h1>{popupInfo.title}</h1>
+              </div>
+            </Popup>
           )
-        })
-      }
+        }
       </Map>
       <div className='timeline'>
         {
