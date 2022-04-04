@@ -71,7 +71,7 @@ const Home = () => {
         })
       }
       </Map>
-      <div>
+      <div className='timeline'>
         {
           data.map((item, index) => {
             return (
