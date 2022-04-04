@@ -38,13 +38,12 @@ const Home = () => {
           longitude: -3.4360,
           zoom: 4
         }}
-        style={{ width: 600, height: 400 }}
+        style={{ width: '100vw', height: '85vh' }}
         mapStyle='mapbox://styles/mapbox/streets-v9'
         mapboxAccessToken='pk.eyJ1IjoiY2pnNHQ4MXZqN3NvcTJxbXMyNzJueHdraiIsImEiOiJjbDFqbXR6bjgxeHF1M2NsbnZwY2czNXdmIn0.ys7kWJ0VGgCxxxXV52wgTA'
       >
       {
         data.Results.map((item, index) => {
-          console.log(item)
           return (
             <Marker key={index} latitude={item.latitude} longitude={item.longitude} anchor='bottom' >
               <img
