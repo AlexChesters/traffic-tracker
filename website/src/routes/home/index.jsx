@@ -8,6 +8,22 @@ import './index.scss'
 
 const Home = () => {
   const [data, setData] = useState(null)
+  const [selectedIndex] = useState(0)
+
+  const formatDate = (dateStr) => {
+    const dateObj = new Date(dateStr)
+
+    const year = dateObj.getFullYear()
+    const month = dateObj.getMonth()
+    const date = dateObj.getDate()
+    let hours = dateObj.getHours()
+    let minutes = dateObj.getMinutes()
+
+    if (hours < 10) hours = '0' + hours
+    if (minutes < 10) minutes = '0' + minutes
+
+    return `${year}-${month}-${date} ${hours}:${minutes}`
+  }
 
   async function fetchData () {
     let rawData = []
@@ -21,7 +37,7 @@ const Home = () => {
     }
 
     const adapted = rawData.sort((a, b) => new Date(b.Timestamp) - new Date(a.Timestamp))
-    setData(adapted[0])
+    setData(adapted)
   }
 
   useEffect(() => {
@@ -43,7 +59,7 @@ const Home = () => {
         mapboxAccessToken='pk.eyJ1IjoiY2pnNHQ4MXZqN3NvcTJxbXMyNzJueHdraiIsImEiOiJjbDFqbXR6bjgxeHF1M2NsbnZwY2czNXdmIn0.ys7kWJ0VGgCxxxXV52wgTA'
       >
       {
-        data.Results.map((item, index) => {
+        data[selectedIndex].Results.map((item, index) => {
           return (
             <Marker key={index} latitude={item.latitude} longitude={item.longitude} anchor='bottom' >
               <img
@@ -55,6 +71,14 @@ const Home = () => {
         })
       }
       </Map>
+      <div>
+        {
+          data.map((item, index) => {
+            console.log(formatDate(item.Timestamp))
+            return null
+          })
+        }
+      </div>
     </section>
   )
 }
