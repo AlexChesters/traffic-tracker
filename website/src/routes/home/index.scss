@@ -4,6 +4,9 @@
 }
 
 .popup {
+  // overriding mapbox default styling
+  max-width: none !important;
+
   h1 {
     font-size: small;
   }
