@@ -54,7 +54,7 @@ const Home = () => {
           )
         })
       }
-        </Map>
+      </Map>
     </section>
   )
 }
