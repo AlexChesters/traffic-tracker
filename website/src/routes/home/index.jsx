@@ -8,7 +8,7 @@ import './index.scss'
 
 const Home = () => {
   const [data, setData] = useState(null)
-  const [selectedIndex] = useState(0)
+  const [selectedIndex, setSelectedIndex] = useState(0)
 
   const formatDate = (dateStr) => {
     const dateObj = new Date(dateStr)
@@ -74,8 +74,14 @@ const Home = () => {
       <div>
         {
           data.map((item, index) => {
-            console.log(formatDate(item.Timestamp))
-            return null
+            return (
+              <button
+                key={index}
+                onClick={() => setSelectedIndex(index)}
+              >
+                {formatDate(item.Timestamp)}
+              </button>
+            )
           })
         }
       </div>
